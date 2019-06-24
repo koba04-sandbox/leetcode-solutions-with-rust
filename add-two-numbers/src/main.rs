@@ -30,18 +30,24 @@ pub fn add_two_numbers(
     }
     let answer = str1.parse::<i32>().unwrap() + str2.parse::<i32>().unwrap();
 
-    let mut digits: Vec<u32> = answer.to_string().chars().map(|d| d.to_digit(10).unwrap()).collect();
-    digits.reverse();
+    let digits: Vec<u32> = answer.to_string().chars().map(|d| d.to_digit(10).unwrap()).collect();
+    // println!("digit {:?}", digits);
 
-    let mut nodes = vec![];
-    for d in digits {
-        println!("digit {}", d);
-        nodes.push(Box::new(ListNode::new(d as i32)));
+    fn add_node(node: Option<Box<ListNode>>, mut target: Box<ListNode>) -> Option<Box<ListNode>> {
+        match node {
+            Some(n) => {
+                // println!("node {:?}", n);
+                target.next = Some(n);
+                Some(target)
+            },
+            None => Some(target)
+        }
     }
-
-    // How can I create a linked-list?
-    // (digits[0] -> digits[1] -> digits[2])
-    None
+   let mut node = None;
+    for d in digits {
+        node = add_node(node, Box::new(ListNode::new(d as i32)));
+    }
+    node
 }
 
 #[cfg(test)]
