@@ -79,4 +79,27 @@ mod tests {
         anode1.next = Some(anode2);
         assert_eq!(add_two_numbers(Some(lnode1), Some(rnode1)), Some(anode1));
     }
+
+    #[test]
+    fn test_add_two_numbers2() {
+        let mut lnode1 = Box::new(ListNode::new(2));
+        let mut lnode2 = Box::new(ListNode::new(4));
+        let lnode3 = Box::new(ListNode::new(3));
+
+        lnode2.next = Some(lnode3);
+        lnode1.next = Some(lnode2);
+
+        let mut rnode1 = Box::new(ListNode::new(5));
+        let rnode2 = Box::new(ListNode::new(6));
+
+        rnode1.next = Some(rnode2);
+
+        let mut anode1 = Box::new(ListNode::new(7));
+        let mut anode2 = Box::new(ListNode::new(0));
+        let anode3 = Box::new(ListNode::new(4));
+
+        anode2.next = Some(anode3);
+        anode1.next = Some(anode2);
+        assert_eq!(add_two_numbers(Some(lnode1), Some(rnode1)), Some(anode1));
+    }
 }
