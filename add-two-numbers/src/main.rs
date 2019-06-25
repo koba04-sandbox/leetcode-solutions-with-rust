@@ -28,7 +28,8 @@ pub fn add_two_numbers(
         str2 = String::from(format!("{}", r.val)) + &str2;
         rnode = r.next;
     }
-    let answer = str1.parse::<i32>().unwrap() + str2.parse::<i32>().unwrap();
+    // TODO: Should calculate each digits of lnode and rnode
+    let answer = str1.parse::<u64>().unwrap() + str2.parse::<u64>().unwrap();
 
     let digits: Vec<u32> = answer.to_string().chars().map(|d| d.to_digit(10).unwrap()).collect();
     // println!("digit {:?}", digits);
