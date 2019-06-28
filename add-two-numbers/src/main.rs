@@ -16,6 +16,7 @@ pub fn add_two_numbers(
     l1: Option<Box<ListNode>>,
     l2: Option<Box<ListNode>>,
 ) -> Option<Box<ListNode>> {
+    /*
     let mut str1 = String::from("");
     let mut str2 = String::from("");
     let mut lnode = l1;
@@ -30,8 +31,24 @@ pub fn add_two_numbers(
     }
     // TODO: Should calculate each digits of lnode and rnode
     let answer = str1.parse::<u64>().unwrap() + str2.parse::<u64>().unwrap();
+    */
 
-    let digits: Vec<u32> = answer.to_string().chars().map(|d| d.to_digit(10).unwrap()).collect();
+    let mut lnode = l1;
+    let mut rnode = l2;
+    let mut digits: Vec<i32> = vec![];
+    let mut prev = 0;
+    while lnode != None || rnode != None {
+        let l = lnode.unwrap();
+        let r = rnode.unwrap();
+        let a = l.val + r.val;
+        digits.push((a + prev) % 10);
+        prev = if a > 10 { 1 } else { 0 };
+
+        lnode = l.next;
+        rnode = r.next;
+    }
+
+    // let digits: Vec<u32> = answer.to_string().chars().map(|d| d.to_digit(10).unwrap()).collect();
     // println!("digit {:?}", digits);
 
     fn add_node(node: Option<Box<ListNode>>, mut target: Box<ListNode>) -> Option<Box<ListNode>> {
