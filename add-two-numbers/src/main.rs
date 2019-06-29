@@ -37,6 +37,9 @@ pub fn add_two_numbers(
         lnode = l.next;
         rnode = r.next;
         has_next = lnode != None || rnode != None;
+        if has_next == false && prev == 1 {
+            digits.push(1);
+        }
     }
     digits.reverse();
     // println!("digit {:?}", digits);
@@ -105,6 +108,19 @@ mod tests {
         let anode3 = Box::new(ListNode::new(4));
 
         anode2.next = Some(anode3);
+        anode1.next = Some(anode2);
+        assert_eq!(add_two_numbers(Some(lnode1), Some(rnode1)), Some(anode1));
+    }
+
+    #[test]
+    fn test_add_two_numbers3() {
+        let lnode1 = Box::new(ListNode::new(5));
+
+        let rnode1 = Box::new(ListNode::new(5));
+
+        let mut anode1 = Box::new(ListNode::new(0));
+        let anode2 = Box::new(ListNode::new(1));
+
         anode1.next = Some(anode2);
         assert_eq!(add_two_numbers(Some(lnode1), Some(rnode1)), Some(anode1));
     }
