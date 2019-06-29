@@ -16,28 +16,37 @@ pub fn add_two_numbers(
     l1: Option<Box<ListNode>>,
     l2: Option<Box<ListNode>>,
 ) -> Option<Box<ListNode>> {
-    let mut str1 = String::from("");
-    let mut str2 = String::from("");
     let mut lnode = l1;
-    while let Some(l) = lnode {
-        str1 = String::from(format!("{}", l.val)) + &str1;
-        lnode = l.next;
-    }
     let mut rnode = l2;
-    while let Some(r) = rnode {
-        str2 = String::from(format!("{}", r.val)) + &str2;
-        rnode = r.next;
-    }
-    // TODO: Should calculate each digits of lnode and rnode
-    let answer = str1.parse::<u64>().unwrap() + str2.parse::<u64>().unwrap();
+    let mut digits: Vec<i32> = vec![];
+    let mut prev = 0;
+    let mut has_next = true;
+    while has_next {
+        let l = match lnode {
+            Some(n) => n,
+            None => Box::new(ListNode::new(0))
+        };
+        let r = match rnode {
+            Some(n) => n,
+            None => Box::new(ListNode::new(0))
+        };
+        let a = l.val + r.val + prev;
+        digits.push(a % 10);
+        prev = if a >= 10 { 1 } else { 0 };
 
-    let digits: Vec<u32> = answer.to_string().chars().map(|d| d.to_digit(10).unwrap()).collect();
+        lnode = l.next;
+        rnode = r.next;
+        has_next = lnode != None || rnode != None;
+        if has_next == false && prev == 1 {
+            digits.push(1);
+        }
+    }
+    digits.reverse();
     // println!("digit {:?}", digits);
 
     fn add_node(node: Option<Box<ListNode>>, mut target: Box<ListNode>) -> Option<Box<ListNode>> {
         match node {
             Some(n) => {
-                // println!("node {:?}", n);
                 target.next = Some(n);
                 Some(target)
             },
@@ -99,6 +108,19 @@ mod tests {
         let anode3 = Box::new(ListNode::new(4));
 
         anode2.next = Some(anode3);
+        anode1.next = Some(anode2);
+        assert_eq!(add_two_numbers(Some(lnode1), Some(rnode1)), Some(anode1));
+    }
+
+    #[test]
+    fn test_add_two_numbers3() {
+        let lnode1 = Box::new(ListNode::new(5));
+
+        let rnode1 = Box::new(ListNode::new(5));
+
+        let mut anode1 = Box::new(ListNode::new(0));
+        let anode2 = Box::new(ListNode::new(1));
+
         anode1.next = Some(anode2);
         assert_eq!(add_two_numbers(Some(lnode1), Some(rnode1)), Some(anode1));
     }
