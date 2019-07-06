@@ -26,13 +26,16 @@ pub fn longest_palindrome(s: String) -> String {
     let mut used = HashSet::new();
     while start_index < len {
         current.push(chars[i]);
-        if !used.contains(&current) && answer.len() < current.len() && palindromic_substring(&current) {
+        let contains = used.contains(&current);
+        if !contains && answer.len() < current.len() && palindromic_substring(&current) {
             // TODO: should not clone
             answer = current.clone();
         }
         i = i + 1;
         // TODO: should not clone
-        used.insert(current.clone());
+        if !contains {
+            used.insert(current.clone());
+        }
         if i >= len {
             start_index = start_index + 1;
             i = start_index;
