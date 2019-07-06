@@ -1,10 +1,19 @@
+use std::collections::HashSet;
+
 fn palindromic_substring(s: &String) -> bool {
-    let mut r = String::from("");
-    let iter = s.chars().rev();
-    for c in iter {
-        r.push(c);
+    let chars: Vec<char> = s.chars().collect();
+    let mut start_index = 0;
+    let mut last_index = chars.len() - 1;
+    // println!("start: {}", s);
+    while start_index != last_index && start_index < last_index {
+        // println!("{}, {}", start_index, last_index);
+        if chars[start_index] != chars[last_index] {
+            return false;
+        }
+        start_index = start_index + 1;
+        last_index = last_index -1;
     }
-    *s == r
+    true
 }
 
 pub fn longest_palindrome(s: String) -> String {
@@ -14,14 +23,16 @@ pub fn longest_palindrome(s: String) -> String {
     let len = chars.len();
     let mut start_index = 0;
     let mut i = 0;
+    let mut used = HashSet::new();
     while start_index < len {
         current.push(chars[i]);
-        // TODO: Skip patterns that are already evaluated
-        if answer.len() < current.len() && palindromic_substring(&current) {
+        if !used.contains(&current) && answer.len() < current.len() && palindromic_substring(&current) {
             // TODO: should not clone
             answer = current.clone();
         }
         i = i + 1;
+        // TODO: should not clone
+        used.insert(current.clone());
         if i >= len {
             start_index = start_index + 1;
             i = start_index;
@@ -59,6 +70,15 @@ mod tests {
                 String::from("jrjnbctoqgzimtoklkxcknwmhiztomaofwwzjnhrijwkgmwwuazcowskjhitejnvtblqyepxispasrgvgzqlvrmvhxusiqqzzibcyhpnruhrgbzsmlsuacwptmzxuewnjzmwxbdzqyvsjzxiecsnkdibudtvthzlizralpaowsbakzconeuwwpsqynaxqmgngzpovauxsqgypinywwtmekzhhlzaeatbzryreuttgwfqmmpeywtvpssznkwhzuqewuqtfuflttjcxrhwexvtxjihunpywerkktbvlsyomkxuwrqqmbmzjbfytdddnkasmdyukawrzrnhdmaefzltddipcrhuchvdcoegamlfifzistnplqabtazunlelslicrkuuhosoyduhootlwsbtxautewkvnvlbtixkmxhngidxecehslqjpcdrtlqswmyghmwlttjecvbueswsixoxmymcepbmuwtzanmvujmalyghzkvtoxynyusbpzpolaplsgrunpfgdbbtvtkahqmmlbxzcfznvhxsiytlsxmmtqiudyjlnbkzvtbqdsknsrknsykqzucevgmmcoanilsyyklpbxqosoquolvytefhvozwtwcrmbnyijbammlzrgalrymyfpysbqpjwzirsfknnyseiujadovngogvptphuyzkrwgjqwdhtvgxnmxuheofplizpxijfytfabx")
             ),
             "qosoq"
+        );
+    }
+    #[test]
+    fn example6() {
+        assert_eq!(
+            longest_palindrome(
+                String::from("zudfweormatjycujjirzjpyrmaxurectxrtqedmmgergwdvjmjtstdhcihacqnothgttgqfywcpgnuvwglvfiuxteopoyizgehkwuvvkqxbnufkcbodlhdmbqyghkojrgokpwdhtdrwmvdegwycecrgjvuexlguayzcammupgeskrvpthrmwqaqsdcgycdupykppiyhwzwcplivjnnvwhqkkxildtyjltklcokcrgqnnwzzeuqioyahqpuskkpbxhvzvqyhlegmoviogzwuiqahiouhnecjwysmtarjjdjqdrkljawzasriouuiqkcwwqsxifbndjmyprdozhwaoibpqrthpcjphgsfbeqrqqoqiqqdicvybzxhklehzzapbvcyleljawowluqgxxwlrymzojshlwkmzwpixgfjljkmwdtjeabgyrpbqyyykmoaqdambpkyyvukalbrzoyoufjqeftniddsfqnilxlplselqatdgjziphvrbokofvuerpsvqmzakbyzxtxvyanvjpfyvyiivqusfrsufjanmfibgrkwtiuoykiavpbqeyfsuteuxxjiyxvlvgmehycdvxdorpepmsinvmyzeqeiikajopqedyopirmhymozernxzaueljjrhcsofwyddkpnvcvzixdjknikyhzmstvbducjcoyoeoaqruuewclzqqqxzpgykrkygxnmlsrjudoaejxkipkgmcoqtxhelvsizgdwdyjwuumazxfstoaxeqqxoqezakdqjwpkrbldpcbbxexquqrznavcrprnydufsidakvrpuzgfisdxreldbqfizngtrilnbqboxwmwienlkmmiuifrvytukcqcpeqdwwucymgvyrektsnfijdcdoawbcwkkjkqwzffnuqituihjaklvthulmcjrhqcyzvekzqlxgddjoir")
+            ),
+            "gykrkyg"
         );
     }
 }
