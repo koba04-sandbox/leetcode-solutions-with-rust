@@ -16,6 +16,7 @@ pub fn longest_palindrome(s: String) -> String {
     let mut i = 0;
     while start_index < len {
         current.push(chars[i]);
+        // TODO: Skip patterns that are already evaluated
         if answer.len() < current.len() && palindromic_substring(&current) {
             // TODO: should not clone
             answer = current.clone();
