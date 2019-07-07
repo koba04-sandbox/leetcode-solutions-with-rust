@@ -20,13 +20,17 @@ pub fn longest_palindrome(s: String) -> String {
     while target.len() > 0 && answer.len() < target.len() {
         let mut tmp = target.clone();
         // println!("target:{}", target);
+        let first_char = target.chars().next().unwrap();
         while tmp.len() > 0 && answer.len() < tmp.len() {
             // println!("tmp:{}", tmp);
             if palindromic_substring(&tmp) {
                 answer = tmp.clone();
             }
-            // TODO: we can skip the last character matches tmp's first character
             tmp.pop().unwrap();
+            // we can skip the last character matches tmp's first character
+            while tmp.len() > 0 && !tmp.ends_with(first_char) {
+                tmp.pop().unwrap();
+            }
         }
         target.remove(0);
     }
