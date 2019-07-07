@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 fn palindromic_substring(s: &String) -> bool {
     let chars: Vec<char> = s.chars().collect();
     let mut start_index = 0;
@@ -17,34 +15,22 @@ fn palindromic_substring(s: &String) -> bool {
 }
 
 pub fn longest_palindrome(s: String) -> String {
+    let mut target = s.clone();
     let mut answer = String::from("");
-    let mut current = String::from("");
-    let chars: Vec<char> = s.chars().collect();
-    let len = chars.len();
-    let mut start_index = 0;
-    let mut i = 0;
-    let mut used = HashSet::new();
-    while start_index < len {
-        current.push(chars[i]);
-        let contains = used.contains(&current);
-        if !contains && answer.len() < current.len() && palindromic_substring(&current) {
-            // TODO: should not clone
-            answer = current.clone();
+    while target.len() > 0 && answer.len() < target.len() {
+        let mut tmp = target.clone();
+        // println!("target:{}", target);
+        while tmp.len() > 0 && answer.len() < tmp.len() {
+            // println!("tmp:{}", tmp);
+            if palindromic_substring(&tmp) {
+                answer = tmp.clone();
+            }
+            tmp.pop().unwrap();
         }
-        i = i + 1;
-        // TODO: should not clone
-        if !contains {
-            used.insert(current.clone());
-        }
-        if i >= len {
-            start_index = start_index + 1;
-            i = start_index;
-            current = String::from("");
-        }
+        target.remove(0);
     }
     answer
 }
-
 
 #[cfg(test)]
 mod tests {
