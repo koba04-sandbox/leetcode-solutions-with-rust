@@ -25,6 +25,7 @@ pub fn longest_palindrome(s: String) -> String {
             if palindromic_substring(&tmp) {
                 answer = tmp.clone();
             }
+            // TODO: we can skip the last character matches tmp's first character
             tmp.pop().unwrap();
         }
         target.remove(0);
