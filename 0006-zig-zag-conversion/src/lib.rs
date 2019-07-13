@@ -23,9 +23,13 @@ pub fn convert(s: String, num_rows: i32) -> String {
                 direction = -1;
                 row = row + direction;
             }
-        } else if direction == - 1 && row == 1 {
-            column = column + 1;
-            row = 0;
+        } else if direction == - 1 && row <= 1 {
+            if row == 1 {
+                column = column + 1;
+                row = 0;
+            } else {
+                row = 1;
+            }
             direction = 1;
         } else {
             row = row + direction;
@@ -72,4 +76,11 @@ mod tests {
         );
     }
 
+    #[test]
+    fn example4() {
+        assert_eq!(
+            convert(String::from("ABCD"), 2),
+            String::from("ACBD")
+        );
+    }
 }
