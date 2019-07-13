@@ -13,23 +13,23 @@ pub fn convert(s: String, num_rows: i32) -> String {
     let mut row: i32 = 0;
     let mut direction: i32 = 1;
     let max = num_rows - 1;
-    let mut initial = true;
     // println!("matrix {:?}", matrix);
     for c in chars {
         // println!("column:{}, row:{}, direction:{}", column, row, direction);
         matrix[column as usize][row as usize] = c;
         if row == max && direction == 1 {
-            direction = -1;
             column = column + 1;
-            row = row + direction;
-        } else if !initial && direction == - 1 && row == 1 {
+            if max > 0 {
+                direction = -1;
+                row = row + direction;
+            }
+        } else if direction == - 1 && row == 1 {
             column = column + 1;
             row = 0;
             direction = 1;
         } else {
             row = row + direction;
         }
-        initial = false
     }
 
     let mut answer = String::new();
@@ -61,6 +61,14 @@ mod tests {
         assert_eq!(
             convert(String::from("PAYPALISHIRING"), 4),
             String::from("PINALSIGYAHRPI")
+        );
+    }
+
+    #[test]
+    fn example3() {
+        assert_eq!(
+            convert(String::from("AB"), 1),
+            String::from("AB")
         );
     }
 
