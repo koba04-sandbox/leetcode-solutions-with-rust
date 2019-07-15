@@ -4,10 +4,10 @@ pub fn my_atoi(str: String) -> i32 {
     let mut is_start = true;
     let mut is_passed_number = false;
     for c in chars {
-        if c == ' ' {
-            continue;
-        }
         if is_start {
+            if c == ' ' {
+                continue;
+            }
             if c == '-' || c == '+' {
                 is_start = false;
                 answer.push(c);
@@ -31,7 +31,13 @@ pub fn my_atoi(str: String) -> i32 {
     }
     match answer.parse::<i32>() {
         Ok(a) => a,
-        Err(_) => std::i32::MIN
+        Err(_) => {
+            if answer.starts_with('-') {
+                std::i32::MIN
+            } else {
+                std::i32::MAX
+            }
+        }
     }
 }
 
@@ -62,5 +68,15 @@ mod tests {
     #[test]
     fn example5() {
         assert_eq!(my_atoi(String::from("-91283472332")), -2147483648);
+    }
+
+    #[test]
+    fn example6() {
+        assert_eq!(my_atoi(String::from("   +0 123")), 0);
+    }
+
+    #[test]
+    fn example7() {
+        assert_eq!(my_atoi(String::from("2147483648")), 2147483647);
     }
 }
