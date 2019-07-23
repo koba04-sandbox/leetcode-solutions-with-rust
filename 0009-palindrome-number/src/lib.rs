@@ -1,5 +1,16 @@
 pub fn is_palindrome(x: i32) -> bool {
-    x == x
+    let nums: Vec<char> = x.to_string().chars().collect();
+
+    let mut start = 0;
+    let mut end = nums.len() - 1;
+    while end > 0 && start <= end {
+        if nums[start] != nums[end] {
+            return false;
+        }
+        start = start + 1;
+        end = end - 1;
+    }
+    true
 }
 
 #[cfg(test)]
@@ -20,4 +31,10 @@ mod tests {
     fn example3() {
         assert_eq!(is_palindrome(10), false);
     }
+
+    #[test]
+    fn example4() {
+        assert_eq!(is_palindrome(0), true);
+    }
 }
+
