@@ -5,15 +5,17 @@ pub fn is_match(s: String, p: String) -> bool {
     loop {
         if let Some(b) = s.pop() {
             if let Some(a) = p.pop() {
-                if a == b {
+                if a != '*' && a != b {
                     println!("not match {}, {}", a, b);
                     result = false;
-                } else {
                     break;
                 }
             } else {
+                result = false;
                 break;
             }
+        } else {
+            break;
         }
     }
     result
