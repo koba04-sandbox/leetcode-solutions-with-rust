@@ -1,5 +1,22 @@
 pub fn is_match(s: String, p: String) -> bool {
-    s == p
+    let mut s: Vec<char> = s.chars().collect();
+    let mut p: Vec<char> = p.chars().collect();
+    let mut result = true;
+    loop {
+        if let Some(b) = s.pop() {
+            if let Some(a) = p.pop() {
+                if a == b {
+                    println!("not match {}, {}", a, b);
+                    result = false;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+    result
 }
 
 #[cfg(test)]
