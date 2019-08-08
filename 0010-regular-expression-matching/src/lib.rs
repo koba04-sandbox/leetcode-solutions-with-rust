@@ -1,14 +1,38 @@
+enum Mode {
+    Char(char),
+    Wildcard,
+    Asterisk,
+}
+
 pub fn is_match(s: String, p: String) -> bool {
     let mut s: Vec<char> = s.chars().collect();
     let mut p: Vec<char> = p.chars().collect();
     let mut result = true;
+    let mut current_mode;
     loop {
         if let Some(b) = s.pop() {
             if let Some(a) = p.pop() {
-                if a != '*' && a != b {
-                    println!("not match {}, {}", a, b);
-                    result = false;
-                    break;
+                if a == '.' {
+                    current_mode = Mode::Wildcard;
+                } else if a == '*' {
+                    current_mode = Mode::Asterisk;
+                } else {
+                    current_mode = Mode::Char(a);
+                }
+                match current_mode {
+                    Mode::Char(a) => {
+                        if a != b {
+                            println!("not match {}, {}", a, b);
+                            result = false;
+                            break;
+                        }
+                    },
+                    Mode::Asterisk => {
+                        // noop
+                    },
+                    Mode::Wildcard => {
+                        // noop
+                    }
                 }
             } else {
                 result = false;
