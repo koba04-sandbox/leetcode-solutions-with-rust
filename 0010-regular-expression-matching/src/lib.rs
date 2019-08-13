@@ -11,6 +11,7 @@ pub fn is_match(source: String, regexp: String) -> bool {
     let mut current_mode;
     let mut source_index = 0;
     let mut regexp_index = 0;
+    let mut prev_regexp_char = ' ';
     while source_index < sources.len() && regexp_index < regexps.len() {
         let source = sources[source_index];
         let regexp = regexps[regexp_index];
@@ -18,20 +19,27 @@ pub fn is_match(source: String, regexp: String) -> bool {
 
         if regexp == '.' {
             current_mode = Mode::Wildcard;
+            prev_regexp_char = regexp;
         } else if regexp == '*' {
             current_mode = Mode::Asterisk;
         } else {
             current_mode = Mode::Char;
+            prev_regexp_char = regexp;
         }
         match current_mode {
             Mode::Char => {
                 if source != regexp {
-                    println!("not match {}, {}", source, regexp);
-                    result = false;
-                    break;
+                    if regexps[regexp_index + 1] != '*' {
+                        println!("not match {}, {}", source, regexp);
+                        result = false;
+                        break;
+                    } else {
+                        regexp_index = regexp_index + 1;
+                    }
+                } else {
+                    source_index = source_index + 1;
+                    regexp_index = regexp_index + 1;
                 }
-                source_index = source_index + 1;
-                regexp_index = regexp_index + 1;
             },
             Mode::Wildcard => {
                 // noop
@@ -39,9 +47,12 @@ pub fn is_match(source: String, regexp: String) -> bool {
                 regexp_index = regexp_index + 1;
             },
             Mode::Asterisk => {
+                println!("asterisk {}, {}", prev_regexp_char, source);
                 // noop
+                if prev_regexp_char == source || prev_regexp_char == '.' {
+                    source_index = source_index + 1;
+                }
                 regexp_index = regexp_index + 1;
-                source_index = source_index + 1;
             }
         }
     }
