@@ -1,14 +1,12 @@
 enum Mode {
-    Char(char),
+    Char,
     Wildcard,
     Asterisk,
 }
 
 pub fn is_match(source: String, regexp: String) -> bool {
-    let mut sources: Vec<char> = source.chars().collect();
-    sources.reverse();
-    let mut regexps: Vec<char> = regexp.chars().collect();
-    regexps.reverse();
+    let sources: Vec<char> = source.chars().collect();
+    let regexps: Vec<char> = regexp.chars().collect();
     let mut result = true;
     let mut current_mode;
     let mut source_index = 0;
@@ -18,29 +16,32 @@ pub fn is_match(source: String, regexp: String) -> bool {
         let regexp = regexps[regexp_index];
         println!("{}, {}", source, regexp);
 
-        source_index = source_index + 1;
-        regexp_index = regexp_index + 1;
-
         if regexp == '.' {
             current_mode = Mode::Wildcard;
         } else if regexp == '*' {
             current_mode = Mode::Asterisk;
         } else {
-            current_mode = Mode::Char(regexp);
+            current_mode = Mode::Char;
         }
         match current_mode {
-            Mode::Char(regexp) => {
+            Mode::Char => {
                 if source != regexp {
                     println!("not match {}, {}", source, regexp);
                     result = false;
                     break;
                 }
-            },
-            Mode::Asterisk => {
-                // noop
+                source_index = source_index + 1;
+                regexp_index = regexp_index + 1;
             },
             Mode::Wildcard => {
                 // noop
+                source_index = source_index + 1;
+                regexp_index = regexp_index + 1;
+            },
+            Mode::Asterisk => {
+                // noop
+                regexp_index = regexp_index + 1;
+                source_index = source_index + 1;
             }
         }
     }
