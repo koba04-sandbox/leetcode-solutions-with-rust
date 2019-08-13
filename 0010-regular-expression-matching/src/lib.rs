@@ -90,4 +90,8 @@ mod tests {
     fn example6() {
         assert_eq!(is_match(String::from("aaa"), String::from("aaaa")), false);
     }
+    #[test]
+    fn example7() {
+        assert_eq!(is_match(String::from("aaba"), String::from("ab*a*c*a")), false);
+    }
 }
