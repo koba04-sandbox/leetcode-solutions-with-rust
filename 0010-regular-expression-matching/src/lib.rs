@@ -1,16 +1,21 @@
 pub struct Solution {}
 
+// This implemetation is based on the solution😭
 impl Solution {
     pub fn is_match(source: String, regexp: String) -> bool {
         // println!("{}:{}", source, regexp);
 
         let sources: Vec<char> = source.chars().collect();
         let regexps: Vec<char> = regexp.chars().collect();
+        // base case
         if regexps.len() == 0 {
             return sources.len() == 0;
         }
 
+        // compare
         let matched = sources.len() > 0 && (sources[0] == regexps[0] || regexps[0] == '.');
+
+        // if the next char is *, we should skip the regexp or compare the regexp with a source shifting a current char
         if regexps.len() > 1 && regexps[1] == '*' {
             return
                 Solution::is_match(sources.iter().collect(), regexps[2..].iter().collect())
