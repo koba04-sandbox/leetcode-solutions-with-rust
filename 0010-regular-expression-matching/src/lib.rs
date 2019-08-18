@@ -18,8 +18,10 @@ impl Solution {
         // if the next char is *, we should skip the regexp or compare the regexp with a source shifting a current char
         if regexps.len() > 1 && regexps[1] == '*' {
             return
+                // a case * doesn't match any source charcters
                 Solution::is_match(sources.iter().collect(), regexps[2..].iter().collect())
                 ||
+                // a case * matches source chars so we try that * matches more characters
                 matched && Solution::is_match(sources[1..].iter().collect(), regexps.iter().collect())
             ;
         }
