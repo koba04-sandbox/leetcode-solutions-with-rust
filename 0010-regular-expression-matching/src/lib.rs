@@ -71,12 +71,10 @@ mod tests {
     fn example10() {
         assert_eq!(Solution::is_match(String::from("ab"), String::from(".*c")), false);
     }
-    /*
     #[test]
     fn example11() {
         assert_eq!(Solution::is_match(String::from("aaaaaaaaaaaaab"), String::from("a*a*a*a*a*a*a*a*a*a*c")), false);
     }
-    */
     #[test]
     fn example12() {
         assert_eq!(Solution::is_match(String::from(""), String::from("c*c*")), true);
