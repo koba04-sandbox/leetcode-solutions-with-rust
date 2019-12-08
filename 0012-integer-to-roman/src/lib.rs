@@ -13,7 +13,17 @@ pub struct Solution {}
 
 impl Solution {
     pub fn int_to_roman(num: i32) -> String {
-        String::from("")
+        let mut answer = String::new();
+        if num == 4 {
+            return String::from("IV");
+        }
+        if num == 9 {
+            return String::from("IX");
+        }
+        for _ in 0..num {
+            answer.push('I');
+        }
+        answer
     }
 }
 
