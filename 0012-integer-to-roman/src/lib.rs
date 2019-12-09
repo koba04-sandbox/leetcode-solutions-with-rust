@@ -13,15 +13,35 @@ pub struct Solution {}
 
 impl Solution {
     pub fn int_to_roman(num: i32) -> String {
+        let roman = std::vec![
+            ('I', 'V'),
+            ('X', 'L'),
+            ('C', 'D'),
+            ('M', '_')
+        ];
+        let nums: Vec<char> = num
+        .to_string()
+        .chars()
+        .collect()
+        ;
+
         let mut answer = String::new();
-        if num == 4 {
-            return String::from("IV");
-        }
-        if num == 9 {
-            return String::from("IX");
-        }
-        for _ in 0..num {
-            answer.push('I');
+        let mut i = 0;
+        for n in nums {
+            let current = roman[i];
+            let next = roman[i + 1];
+
+            let n = n.to_digit(10).unwrap();
+            if n == 4 {
+                answer = format!("{}{}{}", answer, current.0.to_string(), current.1.to_string());
+            } else if n == 9 {
+                answer = format!("{}{}{}", answer, current.0.to_string(), next.0.to_string());
+            } else {
+                for _ in 0..n {
+                    answer.push(current.0);
+                }
+            }
+            i = i +1;
         }
         answer
     }
