@@ -13,34 +13,44 @@ pub struct Solution {}
 
 impl Solution {
     pub fn int_to_roman(num: i32) -> String {
-        let roman = std::vec![
-            ('I', 'V'),
-            ('X', 'L'),
-            ('C', 'D'),
-            ('M', '_')
+        let roman = [
+            ['I', 'V'],
+            ['X', 'L'],
+            ['C', 'D'],
+            ['M', '_'],
+            ['_', '_']
         ];
         let nums: Vec<char> = num
         .to_string()
         .chars()
+        .rev()
         .collect()
         ;
 
         let mut answer = String::new();
         let mut i = 0;
         for n in nums {
+            // println!("next is {}", n);
             let current = roman[i];
             let next = roman[i + 1];
 
-            let n = n.to_digit(10).unwrap();
-            if n == 4 {
-                answer = format!("{}{}{}", answer, current.0.to_string(), current.1.to_string());
-            } else if n == 9 {
-                answer = format!("{}{}{}", answer, current.0.to_string(), next.0.to_string());
-            } else {
-                for _ in 0..n {
-                    answer.push(current.0);
-                }
+            match n.to_digit(10) {
+                Some(4) => answer = format!("{}{}{}", current[0].to_string(), current[1].to_string(), answer),
+                Some(5) => answer = format!("{}{}", current[1].to_string(), answer),
+                Some(9) => answer = format!("{}{}{}", current[0].to_string(), next[0].to_string(), answer),
+                Some(n) => {
+                    let m = n % 5;
+                    // println!("n:{}, m:{}", n, m);
+                    for _ in 0..m {
+                        answer = format!("{}{}", current[0].to_string(), answer);
+                    }
+                    if n > 5 {
+                        answer = format!("{}{}", current[1].to_string(), answer);
+                    }
+                },
+                None => panic!("something went wrong")
             }
+            // println!("answer is {}", answer);
             i = i +1;
         }
         answer
