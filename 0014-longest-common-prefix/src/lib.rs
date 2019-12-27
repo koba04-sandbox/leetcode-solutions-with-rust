@@ -10,23 +10,21 @@ impl Solution {
         let char_len = strs[0].len();
         let mut char_index = 0;
         while char_index < char_len {
-            let mut str_index = 0;
-            let mut target_char = ' ';
+            let mut target_char = None;
             for current_str in strs.iter() {
                 let current_chars: Vec<char> = current_str.chars().collect();
                 if current_chars.len() <= char_index {
                     return answer;
                 }
-                if str_index == 0 {
-                    target_char = current_chars[char_index];
-                } else {
-                    if target_char != current_chars[char_index] {
+                if let Some(c) = target_char {
+                    if c != current_chars[char_index] {
                         return answer;
                     }
+                } else {
+                    target_char = Some(current_chars[char_index]);
                 }
-                str_index = str_index + 1;
             }
-            answer = format!("{}{}", answer, target_char);
+            answer = format!("{}{}", answer, target_char.unwrap());
             char_index = char_index + 1;
         }
         answer
