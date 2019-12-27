@@ -10,7 +10,6 @@ impl Solution {
         let char_len = strs[0].len();
         let mut char_index = 0;
         while char_index < char_len {
-            println!("hoge");
             let mut str_index = 0;
             let mut target_char = ' ';
             for current_str in strs.iter() {
