@@ -1,31 +1,51 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, HashMap};
 
 pub struct Solution {}
 
 impl Solution {
     pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
-        let mut set: HashSet<i32> = HashSet::new();
         let len = nums.len();
         let mut answers = vec![];
+
+        let mut processed_values: HashSet<i32> = HashSet::new();
+        let mut count_by_value: HashMap<&i32, i32> = HashMap::new();
+
+        // Create a HashMap<value, count>
+        for n in &nums {
+            let count = count_by_value.entry(n).or_insert(0);
+            *count += 1;
+        }
+
         for i in 0..len {
-            if set.contains(&nums[i]) {
+            if processed_values.contains(&nums[i]) {
+                // the value has been processed
                 continue;
             }
-            set.insert(nums[i]);
-            let mut set2: HashSet<i32> = HashSet::new();
+            processed_values.insert(nums[i]);
+            let mut processed_values_for_2nd_index: HashSet<i32> = HashSet::new();
             for j in i + 1..len {
-                if set2.contains(&nums[j]) {
+                if processed_values_for_2nd_index.contains(&nums[j]) {
+                    // the value has been processed
                     continue;
                 }
-                set2.insert(nums[j]);
-                for k in j + 1..len {
-                    // println!("{}:{}:{}", i, j, k);
-                    let ans = nums[i] + nums[j] + nums[k];
-                    if ans == 0 {
-                        let mut answer = vec![nums[i], nums[j], nums[k]];
-                        answer.sort();
-                        if Solution::check(&answers, &answer) == false {
-                            answers.push(answer);
+                processed_values_for_2nd_index.insert(nums[j]);
+
+                let target_value = (nums[i] + nums[j]) * -1;
+                // we have the value that the answer is 0
+                if count_by_value.get(&target_value).is_some() {
+                    let mut candidates = vec![nums[i], nums[j], target_value];
+
+                    // create a HashMap<value, count> for the answer
+                    let mut count_by_candidate_value: HashMap<&i32, i32> = HashMap::new();
+                    for candidate in &candidates {
+                        let count = count_by_candidate_value.entry(candidate).or_insert(0);
+                        *count += 1;
+                    }
+
+                    if Solution::is_valid(&count_by_candidate_value, &count_by_value) {
+                        candidates.sort();
+                        if Solution::is_duplicated(&answers, &candidates) == false {
+                            answers.push(candidates);
                         }
                     }
                 }
@@ -33,17 +53,16 @@ impl Solution {
         }
         answers
     }
-    fn check(answers: &Vec<Vec<i32>>, candidate: &Vec<i32>) -> bool {
-        // println!("compare {:?}:{:?}", answers, candidate);
-        'outer: for answer in answers {
-            for (i, a) in answer.iter().enumerate() {
-                if a != &candidate[i] {
-                    continue 'outer;
-                }
+    fn is_valid(count_by_candidate_value: &HashMap<&i32, i32>, count_by_value: &HashMap<&i32, i32>) -> bool {
+        count_by_candidate_value.iter().all(|(value, count)| {
+            match count_by_value.get(value) {
+                Some(limit_count) => count <= limit_count,
+                None => true
             }
-            return true;
-        }
-        false
+        })
+    }
+    fn is_duplicated(answers: &Vec<Vec<i32>>, candidates: &Vec<i32>) -> bool {
+        answers.iter().any(|answer| answer.iter().enumerate().all(|(i, &a)| &a == &candidates[i]))
     }
 }
 
