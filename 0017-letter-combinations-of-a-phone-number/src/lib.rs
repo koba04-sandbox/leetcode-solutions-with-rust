@@ -1,39 +1,40 @@
-use std::collections::HashMap;
 pub struct Solution {}
-
 
 impl Solution {
     pub fn letter_combinations(digits: String) -> Vec<String> {
-        let mut digit_map: HashMap<char, Vec<char>> = HashMap::new();
-        digit_map.insert('2', vec!['a', 'b', 'c']);
-        digit_map.insert('3', vec!['d', 'e', 'f']);
-        digit_map.insert('4', vec!['g', 'h', 'i']);
-        digit_map.insert('5', vec!['j', 'k', 'l']);
-        digit_map.insert('6', vec!['m', 'n', 'o']);
-        digit_map.insert('7', vec!['p', 'q', 'r', 's']);
-        digit_map.insert('8', vec!['t', 'u', 'v']);
-        digit_map.insert('9', vec!['w', 'x', 'y', 'z']);
-
-        let mut answers = vec![];
-
-        let all_chars: Vec<&Vec<char>> = digits.chars().map(|c| digit_map.get(&c).unwrap()).collect();
-        if all_chars.len() == 0 {
-            return answers;
+        let digits: Vec<char> = digits.chars().collect();
+        if digits.len() == 0 {
+            return vec![];
         }
-
-        let mut i = 0;
-        let last = all_chars.len() - 1;
-        while i < last {
-            let first = all_chars[i];
-            let second = all_chars[i + 1];
-            for f in first {
-                for s in second {
-                    answers.push(format!("{}{}", f, s));
-                }
+        let mut answers: Vec<String> = vec![];
+        Solution::create_pattern(String::from(""), 0, &digits, &mut answers);
+        answers.to_vec()
+    }
+    fn create_pattern(candidate: String, index: usize, digits: &Vec<char>, answers: &mut Vec<String>) {
+        let digit = digits[index];
+        let chars = Solution::get_chars(digit);
+        let next_index = index + 1;
+        for c in chars {
+            let current = format!("{}{}", candidate, c);
+            if next_index < digits.len() {
+                Solution::create_pattern(current, next_index, &digits, answers);
+            } else {
+                answers.push(current);
             }
-            i += 1;
         }
-        answers
+    }
+    fn get_chars(digit: char) -> Vec<char> {
+        match digit {
+            '2' => vec!['a', 'b', 'c'],
+            '3' => vec!['d', 'e', 'f'],
+            '4' => vec!['g', 'h', 'i'],
+            '5' => vec!['j', 'k', 'l'],
+            '6' => vec!['m', 'n', 'o'],
+            '7' => vec!['p', 'q', 'r', 's'],
+            '8' => vec!['t', 'u', 'v'],
+            '9' => vec!['w', 'x', 'y', 'z'],
+            _   => panic!("unsupported chars {}", digit)
+        }
     }
 }
 
