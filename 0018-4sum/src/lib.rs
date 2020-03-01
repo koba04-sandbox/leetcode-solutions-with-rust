@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, HashMap};
 
 pub struct Solution {}
 
@@ -9,27 +9,24 @@ impl Solution {
         if len < 4 {
             return answers;
         }
+        let mut count_by_value = HashMap::new();
+        for n in &nums {
+            let count = count_by_value.entry(n).or_insert(0);
+            *count += 1;
+        }
         let mut duplicate_check_set: HashSet<String> = HashSet::new();
-        for i in 0..len {
-            let mut set: HashSet<usize> = HashSet::new();
-            set.insert(i);
-            for j in 0..len {
-                if set.get(&j).is_some() {
-                    continue;
-                }
-                set.insert(j);
-                for k in 0..len {
-                    if set.get(&k).is_some() {
-                        continue;
-                    }
-                    set.insert(k);
-                    for l in 0..len {
-                        if set.get(&l).is_some() {
-                            continue;
+        for (a, _) in count_by_value.iter() {
+            for (b, _) in count_by_value.iter() {
+                for (c, _) in count_by_value.iter() {
+                    let d = target - (*a + *b + *c);
+                    if count_by_value.get(&d).is_some() {
+                        let mut candidate = vec![**a, **b, **c, d];
+                        let mut candidate_count = HashMap::new();
+                        for c in &candidate {
+                            let count = candidate_count.entry(c).or_insert(0);
+                            *count += 1;
                         }
-                        set.insert(l);
-                        if set.iter().fold(0, |sum, v| sum + nums[*v]) == target {
-                            let mut candidate: Vec<i32> = set.iter().map(|v| nums[*v]).collect();
+                        if candidate_count.iter().all(|(c, count)| count <= count_by_value.get(c).unwrap()) {
                             candidate.sort();
                             let candidate_to_string = format!("{:?}", candidate);
                             if duplicate_check_set.get(&candidate_to_string).is_none() {
@@ -37,17 +34,12 @@ impl Solution {
                                 duplicate_check_set.insert(candidate_to_string);
                             }
                         }
-                        set.remove(&l);
                     }
-                    set.remove(&k);
                 }
-                set.remove(&j);
             }
-            set.remove(&i);
         }
         answers
     }
-
 }
 
 #[cfg(test)]
