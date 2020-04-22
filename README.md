@@ -2,5 +2,5 @@
 
 https://leetcode.com/
 
-:warning: This repository includes solutions for problems in LeetCode .
+:warning: This repository includes solutions for problems LeetCode provides.
 
