@@ -33,8 +33,7 @@ impl Solution {
                 break;
             }
         }
-        let target = i - n - 1;
-        target
+        i - n - 1
     }
     fn remove_node(head: &mut Option<Box<ListNode>>, target: i32) -> bool {
         let mut j = 0;
@@ -57,7 +56,10 @@ impl Solution {
     }
     pub fn remove_nth_from_end(mut head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
         let target = Solution::get_target_index(&head, n);
-        println!("target is {}", target);
+        // println!("target is {}", target);
+        if target < 0 {
+            return head.unwrap().next;
+        }
         if Solution::remove_node(&mut head, target) {
             return head;
         }
