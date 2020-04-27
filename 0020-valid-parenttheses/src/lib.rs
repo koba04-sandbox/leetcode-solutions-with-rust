@@ -1,44 +1,32 @@
 pub struct Solution {}
 
 pub struct Tokenizer {
-    is_valid: bool,
     stack: Vec<char>,
 }
 
 impl Tokenizer {
     pub fn new() -> Tokenizer {
         Tokenizer {
-            is_valid: true,
             stack: vec![],
         }
     }
-    pub fn next(&mut self, c: char) {
+    pub fn next(&mut self, c: char) -> bool {
         match c {
             '(' | '{' | '[' => {
                 self.stack.push(c);
+                true
             },
             ')' | '}' | ']' => {
                 let last = self.stack.pop();
                 match last {
-                    Some('(') => {
-                        self.is_valid = c == ')';
-                    },
-                    Some('{') => {
-                        self.is_valid = c == '}';
-                    },
-                    Some('[') => {
-                        self.is_valid = c == ']';
-                    },
-                    _ => {
-                        self.is_valid = false;
-                    }
+                    Some('(') => c == ')',
+                    Some('{') => c == '}',
+                    Some('[') => c == ']',
+                    _ => false
                 }
             }
-            _ => {}
+            _ => true
         }
-    }
-    pub fn is_valid(&self) -> bool {
-        self.is_valid && self.stack.len() == 0
     }
 }
 
@@ -47,12 +35,11 @@ impl Solution {
         let mut tokenizer = Tokenizer::new();
         let chars = s.chars();
         for c in chars {
-            tokenizer.next(c);
-            if tokenizer.is_valid == false {
+            if tokenizer.next(c) == false {
                 return false;
             }
         }
-        tokenizer.is_valid()
+        tokenizer.stack.len() == 0
     }
 }
 
