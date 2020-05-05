@@ -31,55 +31,52 @@ impl ListNode {
   }
 }
 
+enum UpdateTarget {
+  A,
+  B
+}
+
 impl Solution {
   pub fn merge_two_lists(
     l1: Option<Box<ListNode>>,
     l2: Option<Box<ListNode>>,
   ) -> Option<Box<ListNode>> {
-    Solution::merge(&l1, &l2)
-  }
-  fn merge(l1: &Option<Box<ListNode>>, l2: &Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-    let mut current1 = l1;
-    let mut current2 = l2;
-    let mut tmp = vec![];
+    let mut result = None;
 
+    let mut current1 = &l1;
+    let mut current2 = &l2;
     loop {
       if current1.is_none() && current2.is_none() {
         break;
       }
-      if current1.is_some() && current2.is_some() {
+      let update_type = if current1.is_some() && current2.is_some() {
         let a = current1.as_ref().unwrap().val;
         let b = current2.as_ref().unwrap().val;
-        if a < b {
-          tmp.push(a);
-          current1 = &current1.as_ref().unwrap().next;
-        } else {
-          tmp.push(b);
-          current2 = &current2.as_ref().unwrap().next;
-        }
+        if a < b { UpdateTarget::A } else { UpdateTarget::B }
       } else if current1.is_none() {
-        let b = current2.as_ref().unwrap().val;
-        tmp.push(b);
-        current2 = &current2.as_ref().unwrap().next;
+        UpdateTarget::B
       } else {
-        let a = current1.as_ref().unwrap().val;
-        tmp.push(a);
-        current1 = &current1.as_ref().unwrap().next;
+        UpdateTarget::A
+      };
+
+      let val = match update_type {
+        UpdateTarget::A => {
+          let node = current1.as_ref().unwrap();
+          current1 = &node.next;
+          node.val
+        },
+        UpdateTarget::B => {
+          let node = current2.as_ref().unwrap();
+          current2 = &node.next;
+          node.val
+        }
+      };
+
+      if result.is_none() {
+        result = Some(Box::new(ListNode::new(val)));
+      } else {
+        result.as_mut().unwrap().append(val);
       }
-    }
-
-    if tmp.len() == 0 {
-      return None;
-    }
-
-    // println!("{:?}", tmp);
-    let mut iter = tmp.iter();
-    let mut result = Some(Box::new(ListNode {
-      val: *iter.next().unwrap(),
-      next: None,
-    }));
-    for val in iter {
-      result.as_mut().unwrap().append(*val);
     }
     result
   }
