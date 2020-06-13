@@ -25,19 +25,16 @@ mod tests {
     use super::{ListNode, Solution};
 
     fn create_nodes(vals: Vec<i32>) -> Option<Box<ListNode>> {
-        let mut reverse_values = vals.clone();
-        reverse_values.reverse();
-
-        let mut prev: Option<Box<ListNode>> = None;
-        for i in reverse_values {
+        let mut last: Option<Box<ListNode>> = None;
+        for i in vals.into_iter().rev() {
             let mut node = ListNode::new(i);
-            if prev.is_some() {
+            if last.is_some() {
                 // ...
-                node.next = prev;
+                node.next = last;
             }
-            prev = Some(Box::new(node));
+            last = Some(Box::new(node));
         }
-        prev
+        last
     }
 
     #[test]
