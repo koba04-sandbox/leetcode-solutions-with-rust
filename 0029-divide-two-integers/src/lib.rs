@@ -1,8 +1,13 @@
 pub struct Solution {}
 
 impl Solution {
+    // I know this problmen should not use the / operator...
     pub fn divide(dividend: i32, divisor: i32) -> i32 {
-        0
+        let answer: i64 = dividend as i64 / divisor as i64;
+        if answer > std::i32::MAX.into() {
+            return std::i32::MAX;
+        }
+        answer as i32
     }
 }
 
@@ -40,5 +45,12 @@ mod tests {
             Solution::divide(1, 1),
             1
         );
+    }
+    #[test]
+    fn example5() {
+        assert_eq!(
+            Solution::divide(-2147483648, -1),
+            2147483647
+        )
     }
 }
