@@ -1,46 +1,29 @@
+use std::collections::HashMap;
+
 pub struct Solution {}
 
 impl Solution {
     pub fn find_substring(s: String, words: Vec<String>) -> Vec<i32> {
+        let mut word_map = Solution::create_hash_map(words);
+        println!("{:?}", word_map);
         vec![]
     }
-    pub fn make_patterns(words: Vec<String>) -> Vec<String> {
-        let mut result: Vec<String> = Vec::new();
-        for i in 0..words.len() {
-            Solution::recursive(i, &words, &mut result);
+    pub fn create_hash_map(words: Vec<String>) -> HashMap::<String, i32> {
+        let mut word_map = HashMap::<String, i32>::new();
+        for word in words {
+            let count = match word_map.get(&word) {
+                Some(count) => count + 1,
+                None => 1
+            };
+            word_map.insert(word, count);
         }
-        result
-    }
-    pub fn recursive(target: usize, words: &Vec<String>, result: &mut Vec<String>) {
-        let mut s = String::from(&words[target]);
-        for i in 0..words.len() {
-            if i == target {
-                continue;
-            }
-            s += &words[i];
-        }
-        result.push(s);
+        word_map
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::Solution;
-
-    #[test]
-    fn example0() {
-        assert_eq!(
-            Solution::make_patterns(vec![String::from("foo"), String::from("bar"), String::from("baz")]),
-            vec![
-                String::from("foobarbaz"),
-                String::from("foobazbar"),
-                String::from("barfoobaz"),
-                String::from("barbazfoo"),
-                String::from("bazfoobar"),
-                String::from("bazbarfoo")
-            ]
-        );
-    }
 
     #[test]
     fn example1() {
