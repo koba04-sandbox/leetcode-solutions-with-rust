@@ -5,40 +5,21 @@ pub struct Solution {
 
 impl Solution {
     pub fn find_substring(s: String, words: Vec<String>) -> Vec<i32> {
-        let word_map = Solution::create_hash_map(&words);
+        let word_map = Solution::create_word_map(&words);
+        let index_map = Solution::create_index_map(&s, &words);
         let len = words[0].len();
-        let mut index_map = HashMap::<usize, String>::new();
-        let s_len = s.len();
-        let mut processed = HashSet::<String>::new();
-        for word in &words {
-            if processed.get(word).is_some() {
-                continue;
-            }
-            let mut s_i = 0;
-            while s_i < s_len {
-                // println!("s_i {}", s_i);
-                let end = s_i + len;
-                if end > s.len() {
-                    break;
-                }
-                let ss: String = String::from(&s[s_i..end]);
 
-                // for (index, __) in ss.match_indices(word) {
-                if &ss == word {
-                    index_map.insert(s_i, word.clone());
-                    processed.insert(word.clone());
-                }
-                s_i += 1;
-            }
-        }
         let mut answer: Vec<i32> = Vec::new();
+
         let mut indices = index_map.keys().collect::<Vec<&usize>>();
         indices.sort();
-        for start_index in 0..indices.len() {
+        let indices_len = indices.len();
+
+        for start_index in 0..indices_len {
             let mut used_map = HashMap::<String, i32>::new();
             let mut used_count = 0;
             let mut prev_index = None;
-            for i in start_index..indices.len() {
+            for i in start_index..indices_len {
                 let key = indices[i];
                 let target_string = index_map.get(key).unwrap();
                 if let Some(prev) = prev_index {
@@ -68,15 +49,12 @@ impl Solution {
             if used_count == words.len() {
                 // println!("matched {}: {:?}", *indices[start_index], used);
                 answer.push(*indices[start_index] as i32);
-            } else {
-                // println!("not matched length {}, {:?}", *indices[start_index], used);
             }
         }
-
         // println!("{:?}, {:?}", word_map, index_map);
         answer
     }
-    pub fn create_hash_map(words: &Vec<String>) -> HashMap::<String, i32> {
+    fn create_word_map(words: &Vec<String>) -> HashMap::<String, i32> {
         let mut word_map = HashMap::<String, i32>::new();
         for word in words {
             let count = match word_map.get(word) {
@@ -86,6 +64,33 @@ impl Solution {
             word_map.insert(word.clone(), count);
         }
         word_map
+    }
+    fn create_index_map(s: &String, words: &Vec<String>) -> HashMap::<usize, String> {
+        let mut index_map = HashMap::<usize, String>::new();
+        let string_len = s.len();
+        let word_len = words[0].len();
+        let mut processed = HashSet::<String>::new();
+        for word in words {
+            if processed.get(word).is_some() {
+                continue;
+            }
+            let mut i = 0;
+            while i < string_len {
+                // println!("s_i {}", s_i);
+                let end = i + word_len;
+                if end > string_len {
+                    break;
+                }
+                let chunk_string: String = String::from(&s[i..end]);
+
+                if &chunk_string == word {
+                    index_map.insert(i, word.clone());
+                    processed.insert(word.clone());
+                }
+                i += 1;
+            }
+        }
+        index_map
     }
 }
 
